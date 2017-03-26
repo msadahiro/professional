@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div id="dashboard">
+    <div class="header">
+            <h1>Welcome @ViewBag.CurrentUser.Name</h1>
+            <a href="/logout">Logout</a>
+    </div>
+    <div class="mainContent">
+        <div class="table">
+            <a href="users">All Users</a>
+            <h2>Here is your profile description:</h2>
+            <p>@ViewBag.CurrentUser.Description</p>
+        </div>
+        <div class="table">
+            <h2>Your Professional Network</h2>
+        </div>
+        <div class="table">
+            <h2>Invitations</h2>
+            <h4>The following people asked you to be in your network</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div id="users">
+    <div class="header">
+        <a href="/dashboard">My Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <h3>Users you may want to connect with:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                @{friend = false;}
+                
+                foreach(var user in @ViewBag.AllUsers){
+                    <td>@user.Name</td>
+                    <td><a href="request/@user.id">Connect</a></td>
+                }
+            }
+        </tbody>
+    </table>
+</div>
