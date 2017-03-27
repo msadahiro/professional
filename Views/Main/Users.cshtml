@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div id="users">
+    <div class="header">
+        <a href="/myprofile">My Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <h3>Users you may want to connect with:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{  
+                foreach(var user in @ViewBag.AllUsers){
+                    <tr> 
+                        @{bool sent = false;}
+                        @foreach(var a in @user.InvitationsReceived){
+                            if(@a.InviterId == @ViewBag.CurrentUser.id){
+                                sent = true;
+                            }
+                        }
+                        @if(@sent == false){
+                            <td>@user.Name</td>
+                            <td><a href="requestconnection/@user.id">Connect</a></td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

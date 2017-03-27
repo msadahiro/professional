@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using network.Models;
 
 namespace network.Controllers
@@ -42,22 +43,12 @@ namespace network.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction ("Index");
         }
-        [HttpGet]
-        [RouteAttribute("dashboard")]
-        public IActionResult Dashboard(){
-            if(HttpContext.Session.GetInt32("CurrentUser")==null){
-                return RedirectToAction("Login","User");
-            }
-            int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
-            User SignInUser = _context.users.Where(User => User.id == getUserId).SingleOrDefault();
-            ViewBag.CurrentUser = SignInUser;
-            return View();
-        }
+        
         [HttpPost]
         [RouteAttribute("create")]
         public IActionResult Create(RegisterViewModel model, User newUser){
             if(ModelState.IsValid){
-                User RegCheckEmail = _context.users.Where(User => User.Email == newUser.Email).SingleOrDefault();
+                User RegCheckEmail = _context.Users.Where(User => User.Email == newUser.Email).SingleOrDefault();
                 if(RegCheckEmail == null){
                     newUser.CreatedAt = DateTime.Now;
                     newUser.UpdatedAt = DateTime.Now;
@@ -65,7 +56,7 @@ namespace network.Controllers
                     _context.SaveChanges();
                     var CurrentUserId = newUser.id;
                     HttpContext.Session.SetInt32("CurrentUser", (int)CurrentUserId);
-                    return RedirectToAction ("Dashboard");
+                    return RedirectToAction ("myprofile", "Main");
                 }
                 else{
                     ViewBag.RegEmailError = "Email already used";
@@ -81,27 +72,16 @@ namespace network.Controllers
         [RouteAttribute("login")]
         public IActionResult LoginUser(string Email, string Password, LoginViewModel model){
             if(ModelState.IsValid){
-                User SignInUser = _context.users.Where(User => User.Email == Email).SingleOrDefault();
+                User SignInUser = _context.Users.Where(User => User.Email == Email).SingleOrDefault();
                 if(SignInUser != null && Password != null){
                     if(SignInUser.Password == Password){
                         HttpContext.Session.SetInt32("CurrentUser",(int)SignInUser.id);
-                        return RedirectToAction("Dashboard");
+                        return RedirectToAction("myprofile", "Main");
                     }
                 }
             }
             ViewBag.LogError = "Invalid Login";
             return View("Login");
-        }
-        [HttpGet]
-        [RouteAttribute("users")]
-        public IActionResult Users(){
-            if(HttpContext.Session.GetInt32("CurrentUser")==null){
-                return RedirectToAction("Login","User");
-            }
-            int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
-            List<User> AllUsers = _context.users.Where(user => user.id != getUserId).ToList();
-            ViewBag.AllUsers = AllUsers;
-            return View ();
         }
     }
 }

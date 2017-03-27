@@ -6,7 +6,7 @@ namespace network.Models
     {
         // base() calls the parent class' constructor passing the "options" parameter along
         public MyContext(DbContextOptions<MyContext> options) : base(options) { }
-        public DbSet<User> users { get; set; }
-        public DbSet<Invite> invites { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
     }
 }

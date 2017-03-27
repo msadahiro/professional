@@ -26,6 +26,16 @@
                         <th>Action</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @{
+                        foreach(var invite in @ViewBag.AllInvites){
+                            <tr>
+                                <td>@invite.InvitationsReceived</td>
+                                
+                            </tr>
+                        }
+                    }
+                </tbody>
             </table>
         </div>
     </div>

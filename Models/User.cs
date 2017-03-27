@@ -13,12 +13,12 @@ namespace network.Models{
         public DateTime UpdatedAt {get;set;}
 
         [InverseProperty("Inviter")]
-        public List<Invite> InvitationsSent { get; set; }
+        public List<Invitation> InvitationsSent { get; set; }
         [InverseProperty("Invitee")]
-        public List<Invite> InvitationsReceived{ get; set; }
+        public List<Invitation> InvitationsReceived{ get; set; }
         public User () {
-            InvitationsSent = new List<Invite> ();
-            InvitationsReceived = new List<Invite> ();
+            InvitationsSent = new List<Invitation> ();
+            InvitationsReceived = new List<Invitation> ();
         }
     }
 }
