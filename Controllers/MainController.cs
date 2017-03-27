@@ -22,10 +22,10 @@ namespace network{
             }
             int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
             User SignInUser = _context.Users.Where(User => User.id == getUserId).SingleOrDefault();
-            List <User> AllInvites = _context.Users.Where(User => User.id == (int)getUserId)
-                .Include(Invite => Invite.InvitationsReceived)
-                .ToList();
-            ViewBag.AllInvites = AllInvites;
+            List <Invitation> AllPendingRequest = _context.Invitations.Where(User => User.InviteeId == getUserId)
+            .Include(user => user.Inviter)
+            .ToList();
+            ViewBag.AllPendingRequests = AllPendingRequest;
             ViewBag.CurrentUser = SignInUser;
             return View();
         }
@@ -40,8 +40,9 @@ namespace network{
             List<User> GetAllUsers = _context.Users
                 .Where(User => User.id != (int)getUserId)
                 .Include(User => User.InvitationsReceived)
+                .Include(User => User.InvitationsSent)
                 .ToList();
-
+            
             ViewBag.CurrentUser = SignInUser;
             ViewBag.AllUsers = GetAllUsers;
             return View();
@@ -60,6 +61,12 @@ namespace network{
              _context.Add(newInvite);
              _context.SaveChanges();
             return RedirectToAction("users");
+        }
+        [HttpGet]
+        [RouteAttribute("accept/{id}")]
+        public IActionResult Accept (int id){
+            int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
+            return View("myprofile");
         }
     }
 }

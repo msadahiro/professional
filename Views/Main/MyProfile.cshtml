@@ -28,10 +28,12 @@
                 </thead>
                 <tbody>
                     @{
-                        foreach(var invite in @ViewBag.AllInvites){
+                        foreach(var invite in @ViewBag.AllPendingRequests){
                             <tr>
-                                <td>@invite.InvitationsReceived</td>
-                                
+                                @{bool ReceivedRequest = false;}
+                                <td>@invite.Inviter.Name</td>
+                                <td><a href="accept/@invite.Inviter.id">Accept</a></td>
+                                <td><a href="decline/@invite.Inviter.id">Decline</a></td>
                             </tr>
                         }
                     }
