@@ -22,8 +22,9 @@ namespace network{
             }
             int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
             User SignInUser = _context.Users.Where(User => User.id == getUserId).SingleOrDefault();
-            List <Invitation> AllPendingRequest = _context.Invitations.Where(User => User.InviteeId == getUserId)
+            List <Invitation> AllPendingRequest = _context.Invitations.Where(User => User.InviteeId == getUserId || User.InviterId == getUserId)
             .Include(user => user.Inviter)
+            .Include(user => user.Invitee)
             .ToList();
             ViewBag.AllPendingRequests = AllPendingRequest;
             ViewBag.CurrentUser = SignInUser;
@@ -42,7 +43,6 @@ namespace network{
                 .Include(User => User.InvitationsReceived)
                 .Include(User => User.InvitationsSent)
                 .ToList();
-            
             ViewBag.CurrentUser = SignInUser;
             ViewBag.AllUsers = GetAllUsers;
             return View();
@@ -66,7 +66,28 @@ namespace network{
         [RouteAttribute("accept/{id}")]
         public IActionResult Accept (int id){
             int? getUserId = HttpContext.Session.GetInt32("CurrentUser");
-            return View("myprofile");
+            Invitation addConnection = _context.Invitations.SingleOrDefault(invite => invite.id == id);
+            addConnection.Accepted = true;
+            _context.SaveChanges();
+            return RedirectToAction("myprofile");
+        }
+        [HttpGet]
+        [RouteAttribute("decline/{id}")]
+        public IActionResult Decline (int id){
+            Invitation declineConnection = _context.Invitations.SingleOrDefault(invite => invite.id == id);
+            _context.Invitations.Remove(declineConnection);
+            _context.SaveChanges();
+            return RedirectToAction("myprofile");
+        }
+        [HttpGet]
+        [RouteAttribute("users/{id}")]
+        public IActionResult ShowOne(int id){
+            if(HttpContext.Session.GetInt32("CurrentUser")==null){
+                return RedirectToAction("Login","User");
+            }
+            User profileUser = _context.Users.SingleOrDefault(user => user.id == id);
+            ViewBag.Profile = profileUser;
+            return View("ShowOne");
         }
     }
 }

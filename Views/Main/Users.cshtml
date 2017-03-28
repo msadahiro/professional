@@ -21,12 +21,12 @@
                     <tr> 
                         @{bool sent = false;}
                         @foreach(var a in @user.InvitationsReceived){
-                            if(@a.InviterId == @ViewBag.CurrentUser.id){
+                            if(@a.InviterId == @ViewBag.CurrentUser.id || a.Accepted == true){
                                 sent = true;
                             }
                         }
                         @if(@sent == false){
-                            <td>@user.Name</td>
+                            <td><a href="users/@user.id">@user.Name</a></td>
                             <td><a href="requestconnection/@user.id">Connect</a></td>
                         }
                     </tr>

@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "profile";
+}
+
+<div class="container">
+    <a href="/myprofile">My Profile</a>
+    <a href="/logout">Logout</a>
+    <h1>@ViewBag.profile.Name</h1>
+    <h2>Description:</h2>
+    <p>@ViewBag.profile.Description</p>
+</div>

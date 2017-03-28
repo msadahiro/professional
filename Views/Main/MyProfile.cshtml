@@ -14,11 +14,32 @@
         </div>
         <div class="table">
             <h2>Your Professional Network</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach(var invite in @ViewBag.AllPendingRequests){
+                            <tr>
+                                @{bool accepted = false;}
+                                @if(@invite.Accepted == true){
+                                    accepted = true;
+                                }
+                                @if(accepted == true){
+                                    <td>@invite.Inviter.Name</td>
+                                }
+                            </tr>   
+                        }
+                    }
+                </tbody>
+            </table>
         </div>
         <div class="table">
             <h2>Invitations</h2>
             <h4>The following people asked you to be in your network</h4>
-
             <table>
                 <thead>
                     <tr>
@@ -30,10 +51,15 @@
                     @{
                         foreach(var invite in @ViewBag.AllPendingRequests){
                             <tr>
-                                @{bool ReceivedRequest = false;}
-                                <td>@invite.Inviter.Name</td>
-                                <td><a href="accept/@invite.Inviter.id">Accept</a></td>
-                                <td><a href="decline/@invite.Inviter.id">Decline</a></td>
+                                @{bool accepted = false;}
+                                @if(@invite.Accepted == true){
+                                    accepted = true;
+                                }
+                                @if(accepted == false && @invite.Inviter.id != @ViewBag.CurrentUser.id){
+                                    <td>@invite.Inviter.Name</td>
+                                    <td><a href="accept/@invite.id">Accept</a></td>
+                                    <td><a href="decline/@invite.id">Decline</a></td>
+                                }    
                             </tr>
                         }
                     }
